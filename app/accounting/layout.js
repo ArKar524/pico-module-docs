@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AccountingLayout({ children }) {
+  const pathname = usePathname();
+
   const links = [
+    ["/accounting","Introduction"],
     ["/accounting/account-types", "Account Types"],
     ["/accounting/accounts", "Accounts"],
     ["/accounting/fiscal-periods", "Fiscal Periods"],
@@ -21,15 +25,25 @@ export default function AccountingLayout({ children }) {
             <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">
               Accounting Features
             </div>
-            {links.map(([href, label]) => (
-              <Link
-                key={href}
-                href={href}
-                className="block py-1.5 pl-3 rounded text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-              >
-                {label}
-              </Link>
-            ))}
+            {links.map(([href, label]) => {
+              const isActive =
+              href === '/accounting'
+                  ? pathname === '/accounting'          // Intro is active only on exact root
+                  : pathname === href || pathname.startsWith(`${href}/`);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`block py-1.5 pl-3 rounded transition-colors ${
+                    isActive
+                      ? "bg-brand-50 text-brand-600 dark:bg-gray-800 dark:text-brand-400 font-semibold"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-gray-800 hover:text-brand-600 dark:hover:text-brand-400"
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </div>
         </nav>
       </aside>
